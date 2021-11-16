@@ -33,7 +33,10 @@ private:
     // void winGame;
     // void endGame;
     // void playGame;
-
+    
+	//initialized Player Array for the gamePlayer array
+	vector<Player*> playerList;
+    
 public:
 
     // constructors, assignment operator, destructor
@@ -61,5 +64,9 @@ public:
 
     // stream operator if necessary
     friend ostream& operator<<(ostream& out, const GameEngine& ge);
+    
+    void reinforcmentPhase();
+	void issueOrdersPhase();
+	void excuteOrderPhase();
 
 };
