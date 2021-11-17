@@ -40,6 +40,7 @@ public:
 	int getReinforcementPool();
 	void setReinforcementPool(int);
 	void setTerritory(Territory);
+	void setOrder(Order*);	
 	void printOrder();
 	bool playerContientBouns();
 	void print();
