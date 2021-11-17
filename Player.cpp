@@ -159,26 +159,44 @@ vector<Cards*> Player::getCard()
 
 
 //ToAttack() method return a list of territories
-vector<Territory*> Player::toAttack() {
-	// for now only empty territory list returned
+vector<Territory*> Player::toAttack() 
+{
 	vector<Territory*> listOfTerritoriesToAttack;
-	for (vector<Territory*>::iterator it = listOfTerritoriesToAttack.begin(); it != listOfTerritoriesToAttack.end(); ++it) {
-		listOfTerritoriesToAttack.push_back(*it);
-		std::cout << *it << std::endl;
-	}
 	
+	for (int i = 0; i < territory.size(); i++)
+	{
+		string temp = getName();
+		if (!temp.compare(territory[i]->getTerritoryOwner())==0)
+			listOfTerritoriesToAttack.push_back(territory[i]);
+
+	}
+	cout << "The list of territories that can be Attack by " << getName() << endl;
+	for (int i = 0; i <listOfTerritoriesToAttack.size(); i++)
+	{
+		cout <<"Index "<<i<< " "<<(*listOfTerritoriesToAttack[i]).getTname() << " "<<(*AlistOfTerritoriesToAttack[i]).getContinent()<< endl;
+	}
 	return listOfTerritoriesToAttack;
 }
 
+
 //ToDefend() method return a list of territories
-vector<Territory*> Player::toDefend() {
-	// for now only empty territory list returned
-	vector<Territory*> listOfTerritoriesToDefend;
-	for (vector<Territory*>::iterator it = listOfTerritoriesToDefend.begin(); it != listOfTerritoriesToDefend.end(); ++it) {
-		listOfTerritoriesToDefend.push_back(*it);
-		std::cout << *it << std::endl;
-	}
-	return listOfTerritoriesToDefend;
+vector<Territory*> Player::toDefend() 
+{
+		vector<Territory*> listOfTerritoriesToDefend;
+		
+		for (int i = 0; i < territory.size(); i++)
+		{
+			if (getName().compare(territory[i]->getTerritoryOwner())==0)
+
+				listOfTerritoriesToDefend.push_back(territory[i]);
+		}
+
+		cout << "The list of territories that can be Defend by "<< getName() << endl;
+		for (int i = 0; i < listOfTerritoriesToDefend.size(); i++)
+		{
+			cout << "Index " << i << " " << (*listOfTerritoriesToDefend[i]).getTname() << " " << (*listOfTerritoriesToDefend[i]).getContinent() << endl;
+		}
+		return listOfTerritoriesToDefend;
 }
 
 //IssueOrder() will creat a order obj and add it to player's order list
@@ -213,11 +231,41 @@ void Player::issueOrder()
 			}
 		}
 	}
-	//Advance order
-	srand((unsigned int)time(NULL));
-	int actionNumber = rand() % AttackList.size();
+	//Advance order Attack
 
-	int Enemy = AttackList[actionNumber]->getArmyAmount();
+	int actionNumber1 = rand() % AttackList.size();
+	int Enemy = AttackList[actionNumber1]->getArmyAmount();
+
+	int actionNumber2 = rand() % DefendList.size();
+	int Attack = DefendList[actionNumber2]->getArmyAmount();
+
+	if (Enemy >= Attack)
+	{
+		Enemy = Enemy - Attack;
+		AttackList[actionNumber1]->setArmyAmount(Enemy);
+		DefendList[actionNumber2]->setArmyAmount(0);
+	}
+	else
+	{
+		Attack = Attack - Enemy;
+		AttackList[actionNumber1]->setArmyAmount(Attack);
+		DefendList[actionNumber2]->setArmyAmount(0);
+		AttackList[actionNumber1]->setTerritoryOwner(getName());
+	}
+	//Advance order Defend
+
+	int actionNumber3 = rand() % AttackList.size();
+	int Defend1 = DefendList[actionNumber1]->getArmyAmount();
+
+	int actionNumber4 = rand() % DefendList.size();
+	int Defend2 = DefendList[actionNumber2]->getArmyAmount();
+
+	if (actionNumber3 != actionNumber4) 
+	{
+		DefendList[actionNumber3]->setArmyAmount(0);
+		DefendList[actionNumber4]->setArmyAmount(Defend2 + Defend1);
+	}
+
 }
 
 bool Player::playerContientBouns()
@@ -278,6 +326,10 @@ vector<Order*> Player::getOrderList()
 	return listOfOrders;
 }
 
+void Player::setOrder(Order* a) 
+{
+	orderList.push_back(a);
+}
 
 void Player::printOrder()
 {
